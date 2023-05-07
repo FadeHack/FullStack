@@ -1,0 +1,47 @@
+sequenceDiagram
+    participant browser
+    participant server
+    participant database
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    activate server
+    server-->>browser: HTML document with single-page app
+    deactivate server
+
+    Note right of browser: The single-page app loads the JavaScript code that fetches the JSON from the server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
+    deactivate server
+
+    Note right of browser: The single-page app executes the callback function that renders the notes
+
+    Note right of browser: The user interacts with the single-page app by creating, editing, or deleting notes
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate server
+    server-->>database: Store new note
+    activate database
+    database-->>server: Note stored successfully
+    deactivate database
+    server-->>browser: JSON response with updated notes
+    deactivate server
+
+    browser->>server: PUT https://studies.cs.helsinki.fi/exampleapp/notes/1
+    activate server
+    server-->>database: Update note
+    activate database
+    database-->>server: Note updated successfully
+    deactivate database
+    server-->>browser: JSON response with updated notes
+    deactivate server
+
+    browser->>server: DELETE https://studies.cs.helsinki.fi/exampleapp/notes/1
+    activate server
+    server-->>database: Delete note
+    activate database
+    database-->>server: Note deleted successfully
+    deactivate database
+    server-->>browser: JSON response with updated notes
+    deactivate server
